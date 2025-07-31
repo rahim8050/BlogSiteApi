@@ -25,6 +25,8 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Post::class);
+
         $data = $request->validate([
             'title' => 'required',
             'body' => 'required',
