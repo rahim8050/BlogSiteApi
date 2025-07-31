@@ -40,9 +40,13 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $attributes = [
-        'role' => self::ROLE_READER,
-    ];
+    /**
+     * Default attribute values.
+     *
+     * Roles must be explicitly selected during registration, so no
+     * default role is set on the model.
+     */
+    protected $attributes = [];
 
     /**
      * Get the attributes that should be cast.
