@@ -16,6 +16,7 @@ class TagController extends Controller
     {
         $data = $request->validate(['name' => 'required|unique:tags,name']);
         $tag = Tag::create($data);
+
         return response()->json($tag, 201);
     }
 
@@ -26,14 +27,16 @@ class TagController extends Controller
 
     public function update(Request $request, Tag $tag)
     {
-        $data = $request->validate(['name' => 'required|unique:tags,name,' . $tag->id]);
+        $data = $request->validate(['name' => 'required|unique:tags,name,'.$tag->id]);
         $tag->update($data);
+
         return response()->json($tag);
     }
 
     public function destroy(Tag $tag)
     {
         $tag->delete();
+
         return response()->json(null, 204);
     }
 }

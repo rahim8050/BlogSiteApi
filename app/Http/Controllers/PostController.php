@@ -15,11 +15,12 @@ class PostController extends Controller
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%$search%")
-                  ->orWhere('body', 'like', "%$search%");
+                    ->orWhere('body', 'like', "%$search%");
             });
         }
 
         $posts = $query->paginate(10);
+
         return response()->json($posts);
     }
 
@@ -33,7 +34,7 @@ class PostController extends Controller
             'category_id' => 'required|exists:categories,id',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id',
-            'cover_image' => 'image|nullable'
+            'cover_image' => 'image|nullable',
         ]);
 
         $data['slug'] = Str::slug($data['title']);
@@ -55,6 +56,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post->load(['user:id,name', 'category:id,name', 'tags:id,name', 'comments.user:id,name']);
+
         return response()->json($post);
     }
 
@@ -67,7 +69,7 @@ class PostController extends Controller
             'category_id' => 'sometimes|exists:categories,id',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id',
-            'cover_image' => 'image|nullable'
+            'cover_image' => 'image|nullable',
         ]);
 
         if (isset($data['title'])) {
@@ -91,6 +93,7 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
+
         return response()->json(null, 204);
     }
 }

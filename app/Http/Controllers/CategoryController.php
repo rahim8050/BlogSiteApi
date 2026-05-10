@@ -16,10 +16,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required'
+            'name' => 'required',
         ]);
         $data['slug'] = Str::slug($data['name']);
         $category = Category::create($data);
+
         return response()->json($category, 201);
     }
 
@@ -31,16 +32,18 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
-            'name' => 'required'
+            'name' => 'required',
         ]);
         $data['slug'] = Str::slug($data['name']);
         $category->update($data);
+
         return response()->json($category);
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
+
         return response()->json(null, 204);
     }
 }

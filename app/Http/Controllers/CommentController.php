@@ -18,6 +18,7 @@ class CommentController extends Controller
         $data = $request->validate(['body' => 'required']);
         $data['user_id'] = $request->user()->id;
         $comment = $post->comments()->create($data);
+
         return response()->json($comment, 201);
     }
 
@@ -26,6 +27,7 @@ class CommentController extends Controller
         $this->authorize('update', $comment);
         $data = $request->validate(['body' => 'required']);
         $comment->update($data);
+
         return response()->json($comment);
     }
 
@@ -33,6 +35,7 @@ class CommentController extends Controller
     {
         $this->authorize('delete', $comment);
         $comment->delete();
+
         return response()->json(null, 204);
     }
 }
