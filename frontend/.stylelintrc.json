@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-recommended-vue",
+    "stylelint-config-tailwindcss"
+  ],
+  "rules": {
+    "selector-class-pattern": null,
+    "selector-id-pattern": null,
+    "function-name-case": null,
+    "value-keyword-case": null,
+    "no-empty-source": null,
+    "declaration-block-single-line-max-declarations": null,
+    "no-descending-specificity": null
+  }
+}
