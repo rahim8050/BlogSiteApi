@@ -34,7 +34,7 @@ class PostController extends Controller
             'category_id' => 'required|exists:categories,id',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id',
-            'cover_image' => 'image|nullable',
+            'cover_image' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp|max:20480',
         ]);
 
         $data['slug'] = Str::slug($data['title']);
@@ -69,7 +69,7 @@ class PostController extends Controller
             'category_id' => 'sometimes|exists:categories,id',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id',
-            'cover_image' => 'image|nullable',
+            'cover_image' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp|max:20480',
         ]);
 
         if (isset($data['title'])) {

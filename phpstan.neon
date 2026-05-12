@@ -3,7 +3,6 @@ parameters:
         - app
     level: 5
     ignoreErrors:
-        - '#Call to an undefined method .*Controller::authorize\(\)#'
         - '#Call to an undefined static method App\\Models\\User::(create|where)#'
         - '#Call to an undefined static method App\\Models\\Category::create#'
         - '#Call to an undefined static method App\\Models\\Post::create#'

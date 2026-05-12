@@ -2,11 +2,13 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { posts, categories, tags } from '@/services/api';
+import { useToastStore } from '@/stores/toast';
 
 interface Category { id: number; name: string }
 interface Tag { id: number; name: string }
 
 const router = useRouter();
+const toast = useToastStore();
 
 const title = ref('');
 const body = ref('');
@@ -17,7 +19,6 @@ const coverImage = ref<File | null>(null);
 const categoriesList = ref<Category[]>([]);
 const tagsList = ref<Tag[]>([]);
 const loading = ref(false);
-const error = ref('');
 
 async function fetchData() {
     try {
@@ -25,7 +26,7 @@ async function fetchData() {
         categoriesList.value = catRes.data;
         tagsList.value = tagRes.data;
     } catch {
-        error.value = 'Failed to load data';
+        toast.error('Failed to load data');
     }
 }
 
@@ -38,12 +39,11 @@ function handleFileChange(event: Event) {
 
 async function createPost() {
     if (!title.value || !body.value || !categoryId.value) {
-        error.value = 'Please fill all required fields';
+        toast.error('Please fill all required fields');
         return;
     }
 
     loading.value = true;
-    error.value = '';
 
     const formData = new FormData();
     formData.append('title', title.value);
@@ -56,9 +56,15 @@ async function createPost() {
 
     try {
         await posts.create(formData);
+        toast.success('Post created successfully');
         router.push('/dashboard');
-    } catch {
-        error.value = 'Failed to create post';
+    } catch (err: unknown) {
+        const error = err as { response?: { data?: { errors?: Record<string, string[]> } } };
+        const errors = error.response?.data?.errors;
+        if (errors) {
+            const messages = Object.values(errors).flat().join(', ');
+            toast.error(messages);
+        }
     } finally {
         loading.value = false;
     }
@@ -74,8 +80,6 @@ onMounted(fetchData);
         </div>
 
         <h1>Create New Post</h1>
-
-        <div v-if="error" class="error">{{ error }}</div>
 
         <form @submit.prevent="createPost">
             <div class="form-group">
@@ -129,5 +133,4 @@ h1 { margin-bottom: 24px; font-size: 24px; color: var(--text-primary); }
 .tag-checkbox { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 6px 12px; background: var(--bg-tertiary); border-radius: 4px; font-size: 14px; }
 .tag-checkbox:hover { background: var(--border); }
 button { padding: 12px 24px; font-size: 15px; font-weight: 500; }
-.error { color: #ef4444; margin-bottom: 16px; font-size: 14px; }
 </style>

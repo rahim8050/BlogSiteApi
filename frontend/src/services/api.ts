@@ -5,15 +5,20 @@ const api = axios.create({
     baseURL: 'http://localhost:8010/api',
     withCredentials: true,
     headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
     },
+    timeout: 30000,
 });
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+    }
+    if (config.data instanceof FormData) {
+        config.headers['Content-Type'] = 'multipart/form-data';
+    } else {
+        config.headers['Content-Type'] = 'application/json';
     }
     return config;
 });
@@ -62,8 +67,8 @@ export const auth = {
 export const posts = {
     getAll: (params?: { search?: string; page?: number }) => api.get('/posts', { params }),
     getOne: (id: number) => api.get(`/posts/${id}`),
-    create: (data: FormData) => api.post('/posts', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
-    update: (id: number, data: FormData) => api.post(`/posts/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+    create: (data: FormData) => api.post('/posts', data),
+    update: (id: number, data: FormData) => api.post(`/posts/${id}`, data),
     delete: (id: number) => api.delete(`/posts/${id}`),
 };
 
